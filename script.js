@@ -1,4 +1,4 @@
-const app_url = "https://script.google.com/macros/s/AKfycbw-6mJhVMTDO_nsxm-5OCIWsRaRxqNTg2fuJ0TyKsYgQ4NrtKhnQ8thZ1hsz4HGNpvV/exec";
+const app_url = "https://script.google.com/macros/s/AKfycbxDLRBypiCT6eXAR_ukvG-ASZMNSf1JwR7dw0sOAoQCnoi-tPkIOp5S6dWIge2S0CcNwA/exec";
 
 document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     e.preventDefault();
