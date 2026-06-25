@@ -327,12 +327,12 @@ function displayGuestList(guestNames, data) {
             </div>
             <div class="sub-menu">
                 <b>Mains</b><br>
-                <input type="radio" id="main-duo-${index}" name="main-${index}" value="duo">
-                <label for="main-duo-${index}">Lamb & Fillet Duo</label><br>
-                <input type="radio" id="main-chicken-${index}" name="main-${index}" value="chicken">
-                <label for="main-chicken-${index}">Tuscan Chicken</label><br>
-                <input type="radio" id="main-lasagna-${index}" name="main-${index}" value="lasagna">
-                <label for="main-lasagna-${index}">Vegetable Bake (V)</label><br>
+                <input type="radio" id="main-salmon-${index}" name="main-${index}" value="salmon">
+                <label for="main-salmon-${index}">Norwegian Salmon</label><br>
+                <input type="radio" id="main-pork-${index}" name="main-${index}" value="pork">
+                <label for="main-pork-${index}">Slow Roasted Pork Belly</label><br>
+                <input type="radio" id="main-phyllo-${index}" name="main-${index}" value="phyllo">
+                <label for="main-phyllo-${index}">Phyllo Pocket <span class="green">(V)</span></label><br>
             </div>
         </div>
         `
@@ -376,16 +376,16 @@ function displayGuestList(guestNames, data) {
                     <input type="radio" id="starter-trio-${index}" name="starter-${index}" value="trio">
                     <label for="starter-trio-${index}">Trio of Starters</label><br>
                     <input type="radio" id="starter-veg-${index}" name="starter-${index}" value="veg">
-                    <label for="starter-veg-${index}">Trio of Starters <span style="color=green">(V)</span></label><br>
+                    <label for="starter-veg-${index}">Trio of Starters <span class="green">(V)</span></label><br>
                 </div>
                 <div class="sub-menu">
                     <b>Mains</b><br>
-                    <input type="radio" id="main-duo-${index}" name="main-${index}" value="duo">
-                    <label for="main-duo-${index}">Lamb & Fillet Duo</label><br>
-                    <input type="radio" id="main-chicken-${index}" name="main-${index}" value="chicken">
-                    <label for="main-chicken-${index}">Tuscan Chicken</label><br>
-                    <input type="radio" id="main-lasagna-${index}" name="main-${index}" value="lasagna">
-                    <label for="main-lasagna-${index}">Vegetable Bake <span style="color=green">(V)</span></label><br>
+                    <input type="radio" id="main-salmon-${index}" name="main-${index}" value="salmon">
+                    <label for="main-salmon-${index}">Norwegian Salmon</label><br>
+                    <input type="radio" id="main-pork-${index}" name="main-${index}" value="pork">
+                    <label for="main-pork-${index}">Slow Roasted Pork Belly</label><br>
+                    <input type="radio" id="main-phyllo-${index}" name="main-${index}" value="phyllo">
+                    <label for="main-phyllo-${index}">Phyllo Pocket <span class="green">(V)</span></label><br>
                 </div>
             </div>
             `;
