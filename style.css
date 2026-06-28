@@ -27,7 +27,7 @@ body {
     z-index: 999;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .nav-container {
@@ -115,6 +115,14 @@ body {
     .nav-container {
         align-items: center;
         flex-wrap: wrap;
+        padding-left: 16px;
+        padding-right: 16px;
+        gap: 10px;
+    }
+
+    /* Keep the logo from pushing RSVP + burger onto a second row */
+    .nav-logo {
+        font-size: 18px;
     }
 
     .nav-toggle {
@@ -243,6 +251,7 @@ section hr {
     /* border-top: 1px solid #F6F2E6; */
     border-top: 1px solid #D6C9A4;
 }
+
 #rsvp-section-wrapper {
     text-align: center;
     padding-top: 12px;
@@ -262,6 +271,7 @@ section hr {
     border-radius: 8px;
     color: #411900;
 }
+
 /* RSVP stuff */
 .rsvp-container {
     /* transition: 200ms; */
@@ -803,10 +813,15 @@ input[type="checkbox"]:disabled+.custom-checkbox-nocover::after {
 
 .reveal-wrapper {
     position: relative;
-    width: min(92vw, 566px, calc(90vh * 566 / 974));
-    aspect-ratio: 566 / 974;
+    /* Match the artwork's true proportions (centre 697x937; the two flaps are
+       349x937 each and tile to 697 wide). Using 566/974 here squeezed the art
+       into a narrower box, so background/object-fit: cover cropped ~14% off each
+       side — taking the left/right borders of the centre sheet and the flaps. */
+    width: min(92vw, 697px, calc(90vh * 697 / 937));
+    aspect-ratio: 697 / 937;
     perspective: 2000px;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+    container-type: size;
 }
 
 .letter-underneath {
@@ -820,9 +835,10 @@ input[type="checkbox"]:disabled+.custom-checkbox-nocover::after {
 
 .invitation-note {
     position: absolute;
-    top: 8%;
-    left: 12%;
-    right: 12%;
+    z-index: 2;
+    top: 15%;
+    left: 14%;
+    right: 14%;
     bottom: 15%;
     display: flex;
     flex-direction: column;
@@ -833,14 +849,15 @@ input[type="checkbox"]:disabled+.custom-checkbox-nocover::after {
     font-family: Georgia, serif;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    overflow: hidden;
 }
 
 .invitation-note h1 {
     font-family: "Birthstone", cursive;
-    font-size: clamp(3rem, 7vw, 5.2rem);
+    font-size: clamp(1.6rem, 13.5cqw, 5.2rem);
     font-weight: 400;
     line-height: 0.9;
-    margin: 0.2em 0 0.25em;
+    margin: 0.15em 0 0.2em;
     color: #9b6b2f;
     text-transform: none;
     letter-spacing: 0;
@@ -849,32 +866,32 @@ input[type="checkbox"]:disabled+.custom-checkbox-nocover::after {
 .invitation-note p {
     max-width: 360px;
     margin: 0.45em 0;
-    font-size: clamp(0.7rem, 1.1vw, 0.95rem);
-    line-height: 1.65;
+    font-size: clamp(0.6rem, 3cqw, 1rem);
+    line-height: 1.55;
 }
 
 .invite-small {
-    font-size: clamp(0.65rem, 1vw, 0.8rem);
+    font-size: clamp(0.55rem, 2.5cqw, 0.85rem);
 }
 
 .invite-date {
-    font-size: clamp(0.9rem, 1.5vw, 1.25rem) !important;
+    font-size: clamp(0.7rem, 4.3cqw, 1.4rem) !important;
     letter-spacing: 0.25em;
 }
 
 .invite-location {
     opacity: 0.75;
-    font-size: clamp(0.65rem, 1vw, 0.8rem) !important;
+    font-size: clamp(0.55rem, 2.5cqw, 0.85rem) !important;
 }
 
 .invite-divider {
-    margin: 1em 0;
+    margin: 0.7em 0;
     color: #9b6b2f;
-    font-size: 1.4rem;
+    font-size: clamp(1rem, 3.5cqw, 1.8rem);
 }
 
 .invitation-note .view-more {
-    margin-top: 1.3em;
+    margin-top: auto;
 }
 
 .panel-group {
@@ -1026,18 +1043,33 @@ input[type="checkbox"]:disabled+.custom-checkbox-nocover::after {
 }
 
 @keyframes flipLeftOpenMobile {
-    0%   { transform: rotateY(0deg); }
-    100% { transform: rotateY(-120deg); }
+    0% {
+        transform: rotateY(0deg);
+    }
+
+    100% {
+        transform: rotateY(-120deg);
+    }
 }
 
 @keyframes flipRightOpenMobile {
-    0%   { transform: rotateY(0deg); }
-    100% { transform: rotateY(120deg); }
+    0% {
+        transform: rotateY(0deg);
+    }
+
+    100% {
+        transform: rotateY(120deg);
+    }
 }
 
 @keyframes zoomInAfterOpen {
-    0%   { transform: scale(0.6); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(0.6);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }
 
 /* Image gallery */
@@ -1267,18 +1299,14 @@ section h2 {
     }
 
     .invitation-note {
-        top: 10%;
-        left: 8%;
-        right: 8%;
-        bottom: 10%;
-    }
-
-    .invitation-note h1 {
-        font-size: 3rem;
+        top: 13%;
+        left: 10%;
+        right: 10%;
+        bottom: 14%;
     }
 
     .invite-date {
-        font-size: 1rem !important;
+        letter-spacing: 0.15em;
     }
 
     .seal-container {
