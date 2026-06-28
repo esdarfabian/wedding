@@ -35,7 +35,7 @@ body {
     margin: 0 auto;
     padding: 14px 24px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     gap: 20px;
 }
@@ -66,16 +66,32 @@ body {
     transform: translateY(-1px);
 }
 
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
 .nav-rsvp {
-    color: #333 !important;
-    padding: 0;
-    border-radius: 0;
-    font-weight: normal;
-    background: transparent;
+    color: #411900 !important;
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-weight: 500;
+    background: white;
+    border: 1.5px solid #411900;
+    text-decoration: none !important;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+    white-space: nowrap;
 }
 
 .nav-rsvp:hover {
-    color: #b76e79 !important;
+    background-color: #411900 !important;
+    color: white !important;
+    transform: translateY(-1px);
 }
 
 .music-nav-button {
@@ -97,21 +113,27 @@ body {
 
 @media (max-width: 650px) {
     .nav-container {
-        align-items: flex-start;
+        align-items: center;
         flex-wrap: wrap;
     }
 
     .nav-toggle {
-        display: block;
-        margin-left: auto;
-        padding: 8px 14px;
-        border: 1px solid #411900;
-        border-radius: 999px;
-        background: white;
-        color: #411900;
-        font-family: inherit;
-        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        padding: 6px;
+        border: none;
+        background: transparent;
         cursor: pointer;
+    }
+
+    .burger-bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background-color: #411900;
+        border-radius: 2px;
     }
 
     .nav-links {
@@ -304,7 +326,10 @@ section hr {
 
 .attend-options {
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     margin-left: 20px;
+    gap: 4px;
 }
 
 .checkbox-container {
@@ -778,8 +803,7 @@ input[type="checkbox"]:disabled+.custom-checkbox-nocover::after {
 
 .reveal-wrapper {
     position: relative;
-    width: min(92vw, 566px);
-    height: min(88vh, 974px);
+    width: min(92vw, 566px, calc(90vh * 566 / 974));
     aspect-ratio: 566 / 974;
     perspective: 2000px;
     box-shadow: 0 30px 60px rgba(0,0,0,0.6);
@@ -1208,6 +1232,10 @@ section h2 {
         width: 90%;
     }
 
+    .venue-footer-img {
+        min-height: 300px;
+    }
+
     /* Disable hovers in mobile */
     .map-label a:hover {
         color: black;
@@ -1257,6 +1285,23 @@ section h2 {
         width: 120px;
         height: 120px;
     }
+}
+
+.allergy-checkbox {
+    margin-top: 10px;
+    font-size: smaller;
+    color: #a18d6d;
+    white-space: normal;
+    max-width: 100%;
+}
+
+.venue-footer-img {
+    padding: 0;
+    background: url('assets/footer.jpg') center center;
+    background-size: cover;
+    position: relative;
+    min-height: 500px;
+    transform: translateZ(0);
 }
 
 @media (max-width: 380px) {
