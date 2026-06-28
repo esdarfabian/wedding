@@ -1,4 +1,4 @@
-const app_url = "https://script.google.com/macros/s/AKfycbygmHIOCI7ZfWdHf4upRfceocdivdSzh_wOYhHJsUOI2DSkWO3zUCHmjg8h-gyyt4JiAg/exec";
+const app_url = "https://script.google.com/macros/s/AKfycbxDLRBypiCT6eXAR_ukvG-ASZMNSf1JwR7dw0sOAoQCnoi-tPkIOp5S6dWIge2S0CcNwA/exec";
 
 document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -105,7 +105,7 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
         .catch(error => {
             // Handling any errors that occur during the fetch operation
             console.error('Error submitting form:', error);
-            displayErrorMessage("An error occurred while submitting your RSVP. Please try again. If the issue persists please contact Kim or Kevin!");
+            displayErrorMessage("An error occurred while submitting your RSVP. Please try again. If the issue persists please contact Natasha or Fabian!");
             submitButton.textContent = "Error!";
             setTimeout(function () {
                 $('#submit').text("Submit");
@@ -484,7 +484,7 @@ function displayGuestList(guestNames, data) {
     }
     if (data.locked) {
         submitButton.textContent = "Response locked"
-        displayErrorMessage('Your responses have been locked, please contact Kevin or Kim \nif you need to make changes!', '#432616');
+        displayErrorMessage('Your responses have been locked, please contact Natasha or Fabian \nif you need to make changes!', '#432616');
     }
 }
 
