@@ -86,9 +86,14 @@
                 Natasha &#9829; Fabian
             </div>
 
-            <button class="nav-toggle" id="nav-toggle" type="button">
-                Menu
-            </button>
+            <div class="nav-actions">
+                <a href="#rsvp-section" class="nav-rsvp">RSVP</a>
+                <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Menu">
+                    <span class="burger-bar"></span>
+                    <span class="burger-bar"></span>
+                    <span class="burger-bar"></span>
+                </button>
+            </div>
 
             <div class="nav-links">
                 <a href="#welcome-section">Welcome</a>
@@ -97,7 +102,6 @@
                 <a href="#dress-code-section">Dress Code</a>
                 <a href="#accommodation-section">Accommodation</a>
                 <a href="#menu-section">Menu</a>
-                <a href="#rsvp-section" class="nav-rsvp">RSVP</a>
                 <a href="#faq-section">FAQ</a>
                 <a class="music-nav-button">
                     <span class="nav-song">Song</span> Requests
@@ -304,10 +308,16 @@
                 <p>Dear <b id="rsvp-guest-names">???</b>, we would love to have you at our wedding!</p>
                 <div class="attend-options">
                     <div class="checkbox-container">
-                        <input type="checkbox" id="attend-yes" name="attend-option" hidden
+                        <input type="checkbox" id="attend-both" name="attend-option" hidden
                             onchange="checkChanged(this)"></input>
-                        <label for="attend-yes" class="custom-checkbox"></label>
-                        <span class="custom-checkbox-label"><span name="attend-pron">I</span>'ll be there!</span>
+                        <label for="attend-both" class="custom-checkbox"></label>
+                        <span class="custom-checkbox-label">Wedding &amp; Night Before</span>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="attend-wedding" name="attend-option" hidden
+                            onchange="checkChanged(this)"></input>
+                        <label for="attend-wedding" class="custom-checkbox"></label>
+                        <span class="custom-checkbox-label">Wedding only</span>
                     </div>
                     <div class="checkbox-container">
                         <input type="checkbox" id="attend-no" name="attend-option" hidden
@@ -384,6 +394,8 @@
             Feel free to reach out to Natasha or Fabian directly.
         </p>
     </section>
+
+    <section class="venue-footer-img"></section>
 
     <footer>
         <h3>Made by Fabian &amp; Natasha &#9829;</h3>
