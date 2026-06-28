@@ -19,7 +19,13 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     var starters = [];
     var mains = [];
 
-    var isAttending = document.getElementById("attend-yes").checked;
+    var isAttending = document.getElementById("attend-both").checked || document.getElementById("attend-wedding").checked;
+    var isNightBefore = document.getElementById("attend-both").checked;
+    var allergies = [];
+    document.getElementsByName("allergy-guest").forEach((element) => {
+        allergies.push(element.checked);
+    });
+
     document.getElementsByName("attend-guest").forEach((element, i) => {
         attending.push(isAttending ? element.checked : false);
         var menu = getMenuItems(i);
@@ -61,9 +67,10 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     const formData = {
         token: token,
         attending: isAttending,
+        night_before: isNightBefore,
         n_guests: attending.filter(Boolean).length,
         attend_list: attending.join(', '),
-        // dietary: requirements.join(', ').toLowerCase(),
+        has_allergies: allergies.join(', '),
         starter: starters.join(', ').toLowerCase(),
         mains: mains.join(', ').toLowerCase(),
     };
@@ -246,56 +253,47 @@ function getMenuItems(index) {
 }
 
 function checkChanged(checkedCheckbox) {
-    // Get all checkboxes with the name 'options'
     const checkboxes = document.querySelectorAll('input[name="attend-option"]');
-    const attendNormal = document.getElementById("normal-attend");
-    const attendMulti = document.getElementById("multi-attend");
     const submitButton = document.getElementById("submit");
 
-    // Loop through each checkbox
     var anyChecked = false;
     checkboxes.forEach((checkbox) => {
-        // If the checkbox is not the one that was just changed, uncheck it
         if (checkbox !== checkedCheckbox) {
             checkbox.checked = false;
         }
-
-        if (checkbox.id == "attend-yes") {
-            if (checkbox.checked) {
-                if (window.n_guests > 1) {
-                    showAttend('multi-attend');
-                } else {
-                    showAttend('normal-attend');
-                }
-                var attendList = [];
-                document.getElementsByName("attend-guest").forEach((element, i) => attendList.push(element.checked));
-
-                var n_guests = attendList.filter(Boolean).length;
-                if (window.n_guests === 1) {
-                    n_guests = 1
-                }
-                if (n_guests > 0) {
-                    if (window.n_guests > 1) {
-                        submitButton.textContent = `${window.responded ? 'Update ' : ''} RSVP for ${n_guests} guest${n_guests > 1 ? 's' : ''}`;
-                    } else {
-                        submitButton.textContent = "Update RSVP"
-                    }
-                    submitButton.disabled = false;
-                } else {
-                    submitButton.textContent = 'Cannot RSVP with no guests!';
-                    submitButton.disabled = true;
-                }
-            } else {
-                attendMulti.hidden = true;
-                attendNormal.hidden = true;
-                hideAttend('multi-attend');
-                hideAttend('normal-attend');
-                submitButton.textContent = "Submit response, we'll miss you!";
-            }
-        }
-
         anyChecked = (anyChecked | checkbox.checked);
     });
+
+    const isAttending = document.getElementById("attend-both").checked || document.getElementById("attend-wedding").checked;
+
+    if (isAttending) {
+        if (window.n_guests > 1) {
+            showAttend('multi-attend');
+        } else {
+            showAttend('normal-attend');
+        }
+        var attendList = [];
+        document.getElementsByName("attend-guest").forEach((element, i) => attendList.push(element.checked));
+        var n_guests = attendList.filter(Boolean).length;
+        if (window.n_guests === 1) {
+            n_guests = 1;
+        }
+        if (n_guests > 0) {
+            if (window.n_guests > 1) {
+                submitButton.textContent = `${window.responded ? 'Update ' : ''} RSVP for ${n_guests} guest${n_guests > 1 ? 's' : ''}`;
+            } else {
+                submitButton.textContent = "Update RSVP";
+            }
+            submitButton.disabled = false;
+        } else {
+            submitButton.textContent = 'Cannot RSVP with no guests!';
+            submitButton.disabled = true;
+        }
+    } else {
+        hideAttend('multi-attend');
+        hideAttend('normal-attend');
+        submitButton.textContent = "Submit response, we'll miss you!";
+    }
 
     submitButton.disabled = !anyChecked;
     if (!anyChecked) {
@@ -334,6 +332,11 @@ function displayGuestList(guestNames, data) {
                 <input type="radio" id="main-phyllo-${index}" name="main-${index}" value="phyllo">
                 <label for="main-phyllo-${index}">Phyllo Pocket <span class="green">(V)</span></label><br>
             </div>
+        </div>
+        <div class="checkbox-container allergy-checkbox">
+            <input type="checkbox" id="allergy-${index}" name="allergy-guest" hidden></input>
+            <label for="allergy-${index}" class="custom-checkbox custom-checkbox-nocover"></label>
+            <span class="custom-checkbox-label">Dietary requirements / allergies</span>
         </div>
         `
 
@@ -388,6 +391,11 @@ function displayGuestList(guestNames, data) {
                     <label for="main-phyllo-${index}">Phyllo Pocket <span class="green">(V)</span></label><br>
                 </div>
             </div>
+            <div class="checkbox-container allergy-checkbox">
+                <input type="checkbox" id="allergy-${index}" name="allergy-guest" hidden></input>
+                <label for="allergy-${index}" class="custom-checkbox custom-checkbox-nocover"></label>
+                <span class="custom-checkbox-label">Dietary requirements / allergies</span>
+            </div>
             `;
 
             document.getElementById("multi-attend").appendChild(guestElement);
@@ -401,6 +409,8 @@ function displayGuestList(guestNames, data) {
                 document.getElementsByName(`main-${index}`).forEach((element, _) => {
                     element.disabled = !this.checked;
                 })
+                var allergyBox = document.getElementById(`allergy-${index}`);
+                if (allergyBox) allergyBox.disabled = !this.checked;
                 var attendList = [];
                 document.getElementsByName("attend-guest").forEach((element, i) => attendList.push(element.checked));
                 var n_guests = attendList.filter(Boolean).length;
@@ -426,6 +436,8 @@ function displayGuestList(guestNames, data) {
                     element.checked = element.value === mains;
                     element.disabled = !checkbox.checked | data.locked;
                 })
+                var allergyBox = document.getElementById(`allergy-${index}`);
+                if (allergyBox) allergyBox.disabled = !checkbox.checked | data.locked;
             }
         });
     }
@@ -433,24 +445,34 @@ function displayGuestList(guestNames, data) {
     // Appending the guest list element to the RSVP section
     rsvpSection.hidden = false
 
-    const attendYes = document.getElementById("attend-yes")
-    const attendNo = document.getElementById("attend-no")
+    const attendBoth = document.getElementById("attend-both");
+    const attendWedding = document.getElementById("attend-wedding");
+    const attendNo = document.getElementById("attend-no");
+
     if (data.responded) {
         submitButton.disabled = data.locked
         if (data.attending) {
             if (guestNames.length > 1) {
-                // document.getElementById('multi-attend').hidden = false;
                 showAttend('multi-attend');
             } else {
-                // document.getElementById('normal-attend').hidden = false;
                 showAttend('normal-attend');
             }
-            attendYes.checked = true
+            if (data.night_before) {
+                attendBoth.checked = true;
+            } else {
+                attendWedding.checked = true;
+            }
         } else {
             attendNo.checked = true
         }
-        attendYes.disabled = data.locked
-        attendNo.disabled = data.locked
+        attendBoth.disabled = data.locked;
+        attendWedding.disabled = data.locked;
+        attendNo.disabled = data.locked;
+        var allergyList = String(data.has_allergies).split(', ');
+        document.getElementsByName("allergy-guest").forEach((element, i) => {
+            element.checked = allergyList[i] === 'true';
+            element.disabled = data.locked;
+        });
         if (!data.locked) {
             if (window.n_guests > 1) {
                 submitButton.textContent = `${window.responded ? 'Update ' : ''} RSVP for ${n_guests} guest${n_guests > 1 ? 's' : ''}`;
@@ -549,10 +571,10 @@ var map = null;
 function setupMap() {
     zoom = window.innerWidth < 460 ? 11 : 13;
     // Initialize the map with the specified view
-    map = L.map('map', { 
+    map = L.map('map', {
         scrollWheelZoom: L.Browser.mobile,
         dragging: !L.Browser.mobile,
-    }).setView([-33.901792, 18.797119], zoom);
+    }).setView([-33.291373, 19.1140692], zoom);
 
     // Add CartoDB Positron tile layer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -599,6 +621,14 @@ function setupMapLocations(locations) {
             addAccomodation(location);
         }
     });
+
+    if (locations.length > 0) {
+        var bounds = L.latLngBounds(locations.map(function (l) { return [l.lat, l.lng]; }));
+        map.fitBounds(bounds, { padding: [30, 30] });
+        map.once('moveend', function () {
+            map.setZoom(map.getZoom() - 3);
+        });
+    }
 }
 
 function closeInvitation() {
