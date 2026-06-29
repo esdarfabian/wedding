@@ -100,6 +100,7 @@
                 <a href="#details-section">Wedding</a>
                 <a href="#night-before-section">Night Before</a>
                 <a href="#dress-code-section">Dress Code</a>
+                <a href="#registry-section">Registry</a>
                 <a href="#accommodation-section">Accommodation</a>
                 <a href="#menu-section">Menu</a>
                 <a href="#faq-section">FAQ</a>
@@ -128,6 +129,27 @@
         </p>
     </section>
 
+    <section id="night-before-section">
+        <h2>A TOAST TO TOMORROW</h2>
+        <p>
+            Guests are welcome to join us for a relaxed evening before the wedding.
+        </p>
+        <p>
+            Date<br>
+            <b>16 October 2026</b><br><br>
+
+            Time<br>
+            <b>17:00</b><br><br>
+
+            Location<br>
+            <b id="loc_2">Checking rsvp token...</b>
+        </p>
+        <p>
+            Feel free to drop in and spend some time together before the big day. Further details will follow.
+        </p>
+        <hr>
+    </section>
+
     <section>
         <a class="anchor" id="details-section"></a>
         <br>
@@ -143,7 +165,6 @@
             Ceremony &amp; Reception<br>
             <b>17 October 2026</b><br>
             Guest to arrive at <b>14:30</b><br>
-            Guest to be seated by <b>14:45</b><br>
             Ceremony starts at <b>15:00</b><br>
             Reception to follow<br><br>
 
@@ -155,24 +176,6 @@
 
             RSVP by<br>
             <b>15 August 2026</b>
-        </p>
-        <hr>
-    </section>
-
-    <section id="night-before-section">
-        <h2>A TOAST TO TOMORROW</h2>
-        <p>
-            Guests are welcome to join us for a relaxed social evening the night before the wedding.
-        </p>
-        <p>
-            <b>16 October 2026</b><br><br>
-
-            Guest can arrive from <b>18:00</b><br><br>
-
-            <b id="loc_2">Checking rsvp token...</b>
-        </p>
-        <p>
-            Feel free to drop in, enjoy a drink, and spend some time together before the big day. Further details will follow.
         </p>
         <hr>
     </section>
@@ -193,9 +196,32 @@
             Most importantly, we want you to feel comfortable, confident, and ready to celebrate with us!
         </p>
 
+        <img class="colour-pallet" src="assets/colour-pallet.jpg"
+            alt="Wedding colour palette">
+
+        <p>
+            Looking for inspiration? Take a peek at our
+            <a href="https://www.easyregistry.co.za/natashaandfabian" target="_blank" rel="noopener noreferrer">dress
+                code inspiration board</a>.
+        </p>
+
         <div class="dress-code-gallery">
             <!-- Dress code inspiration images -->
         </div>
+    </section>
+
+    <section id="morning-after-section">
+        <h2>THE MORNING AFTER</h2>
+        <p>
+            Before you head home, join us for a relaxed morning after the celebrations,
+            where <b>coffee and muffins</b> will be served. This is casual chance to share a few last
+            moments together.
+        </p>
+        <p>
+            <b style="font-size: 12px;">
+                Please note there is no formal breakfast provided at the accommodation.
+            </b>
+        </p>
     </section>
 
     <section class="gallery" id="gallery-section">
@@ -211,39 +237,6 @@
             <img src="assets/gallery_8.jpg">
         </div>
     </section>
-
-    <section id="accommodation-section">
-        <h2>ACCOMMODATION</h2>
-        <p>
-            There is limited accommodation available on-site for guests and additional off-site accommodation in the
-            surrounding area.
-        </p>
-
-        <h3>On-Site Accommodation</h3>
-        <p>
-            On-site accommodation is available for a two-night stay over the wedding weekend.
-            If you are interested in staying on-site, please let us know as soon as possible so we can assist with the
-            available options.
-        </p>
-        <div id="onsite-accommodation-list"></div>
-
-        <h3>Off-Site Accommodation</h3>
-        <p>
-            There are also many lovely off-site accommodation options nearby for guests who prefer to stay elsewhere,
-            or who are not able to secure a spot on-site.
-        </p>
-        <div id="offsite-accommodation-list"></div>
-
-        <p>
-            <b style="font-size: 12px;">
-                Availability cannot be guaranteed and booking early is recommended.
-            </b>
-        </p>
-    </section>
-
-    <section id="map"></section>
-
-    <section class="mid"></section>
 
     <section class="menu-section" id="menu-section">
         <h1>THE MENU</h1>
@@ -304,18 +297,25 @@
                 <span id="rsvp-error" hidden></span>
                 <h2>RSVP</h2>
                 <p>Dear <b id="rsvp-guest-names">???</b>, we would love to have you at our wedding!</p>
+                <p>Please let us know which events <span name="attend-pron">I</span> will be joining:</p>
                 <div class="attend-options">
                     <div class="checkbox-container">
-                        <input type="checkbox" id="attend-both" name="attend-option" hidden
+                        <input type="checkbox" id="attend-night-before" name="attend-event" hidden
                             onchange="checkChanged(this)"></input>
-                        <label for="attend-both" class="custom-checkbox"></label>
-                        <span class="custom-checkbox-label">Wedding &amp; Night Before</span>
+                        <label for="attend-night-before" class="custom-checkbox"></label>
+                        <span class="custom-checkbox-label">Night Before &middot; 16 Oct</span>
                     </div>
                     <div class="checkbox-container">
-                        <input type="checkbox" id="attend-wedding" name="attend-option" hidden
+                        <input type="checkbox" id="attend-wedding" name="attend-event" hidden
                             onchange="checkChanged(this)"></input>
                         <label for="attend-wedding" class="custom-checkbox"></label>
-                        <span class="custom-checkbox-label">Wedding only</span>
+                        <span class="custom-checkbox-label">Wedding &middot; 17 Oct</span>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="attend-morning-after" name="attend-event" hidden
+                            onchange="checkChanged(this)"></input>
+                        <label for="attend-morning-after" class="custom-checkbox"></label>
+                        <span class="custom-checkbox-label">Morning After &middot; 18 Oct</span>
                     </div>
                     <div class="checkbox-container">
                         <input type="checkbox" id="attend-no" name="attend-option" hidden
@@ -344,8 +344,55 @@
                 <button type="submit" id="submit" disabled="true">Submit</button>
             </form>
         </div>
-        <div class="bottom"></div>
     </section>
+
+    <section class="mid"></section>
+
+    <section id="registry-section">
+        <h2>REGISTRY</h2>
+        <p>
+            Your presence on our special day is the greatest gift of all. However, should you
+            wish to spoil us, we have put together a registry to help us start this next chapter
+            together.
+        </p>
+        <p>
+            <a href="https://www.easyregistry.co.za/natashaandfabian" target="_blank" rel="noopener noreferrer">View our
+                registry</a>
+        </p>
+    </section>
+
+    <section id="accommodation-section">
+        <h2>ACCOMMODATION</h2>
+        <p>
+            There is limited accommodation available on-site for guests and additional off-site accommodation in the
+            surrounding area.
+        </p>
+
+        <h3>On-Site Accommodation</h3>
+        <p>
+            On-site accommodation is available for a two-night stay over the wedding weekend.
+            If you are interested in staying on-site, please let us know as soon as possible so we can assist with the
+            available options.
+        </p>
+        <div id="onsite-accommodation-list"></div>
+
+        <h3>Off-Site Accommodation</h3>
+        <p>
+            There are also many lovely off-site accommodation options nearby for guests who prefer to stay elsewhere,
+            or who are not able to secure a spot on-site.
+        </p>
+        <div id="offsite-accommodation-list"></div>
+
+        <p>
+            <b style="font-size: 12px;">
+                Availability cannot be guaranteed and booking early is recommended.
+            </b>
+        </p>
+    </section>
+
+    <section id="map"></section>
+
+    <div class="bottom"></div>
 
     <section id="faq-section">
         <h2>FAQ</h2>
@@ -362,7 +409,8 @@
 
         <h3>Is transport provided?</h3>
         <p>
-            Guest are required to arrange their own transport to the venue. Uber is not readily available, however some local shuttle services as provided by the venue Dtrack Tours (083 377 6614) and Zane (082 045 1754).    
+            Guest are required to arrange their own transport to the venue. Uber is not readily available, however some
+            local shuttle services as provided by the venue Dtrack Tours (083 377 6614) and Zane (082 045 1754).
         </p>
 
         <h3>Is the accommodation self-catering?</h3>
@@ -378,7 +426,8 @@
 
         <h3>Does the invitation include a plus one?</h3>
         <p>
-            This invitation is extended to you and those listed on your invitation only. Unfortunatley no additional plus ones can be accomodated.
+            This invitation is extended to you and those listed on your invitation only. Unfortunatley no additional
+            plus ones can be accomodated.
         </p>
 
         <h3>Will drinks be available for purchase?</h3>
@@ -393,7 +442,7 @@
         </p>
     </section>
 
-    <section class="footer"></section>
+    <section class="venue-footer-img"></section>
 
     <footer>
         <h3>Made by Fabian &amp; Natasha &#9829;</h3>
