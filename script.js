@@ -19,8 +19,11 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
     var starters = [];
     var mains = [];
 
-    var isAttending = document.getElementById("attend-both").checked || document.getElementById("attend-wedding").checked;
-    var isNightBefore = document.getElementById("attend-both").checked;
+    // Per-event RSVP: each event is an independent checkbox. The wedding is the
+    // only event that drives the per-guest menu / attendance list.
+    var isAttending = document.getElementById("attend-wedding").checked;
+    var isNightBefore = document.getElementById("attend-night-before").checked;
+    var isMorningAfter = document.getElementById("attend-morning-after").checked;
     var allergies = [];
     document.getElementsByName("allergy-guest").forEach((element) => {
         allergies.push(element.checked);
@@ -38,14 +41,21 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
         mains.push(element.checked ? menu[1] : "none")
     });
     if (window.n_guests === 1) {
-        var menu = getMenuItems(0);
-        if (!menu) {
-            // No menu option selected
-            displayErrorMessage("Please fill in your menu selection!")
-            return
+        // A menu is only required when attending the wedding dinner; a single guest
+        // joining only the night-before / morning-after has no menu to pick.
+        if (isAttending) {
+            var menu = getMenuItems(0);
+            if (!menu) {
+                // No menu option selected
+                displayErrorMessage("Please fill in your menu selection!")
+                return
+            }
+            starters.push(menu[0])
+            mains.push(menu[1])
+        } else {
+            starters.push("none")
+            mains.push("none")
         }
-        starters.push(menu[0])
-        mains.push(menu[1])
     }
 
     if (starters.length < window.n_guests) {
@@ -68,6 +78,7 @@ document.getElementById('rsvp-form').addEventListener('submit', function (e) {
         token: token,
         attending: isAttending,
         night_before: isNightBefore,
+        morning_after: isMorningAfter,
         n_guests: attending.filter(Boolean).length,
         attend_list: attending.join(', '),
         has_allergies: allergies.join(', '),
@@ -186,25 +197,25 @@ function fetchRecipientName() {
             if (data.status === 'valid_token') {
                 $('#rsvp-loading').hide();
                 $('#rsvp-public-message').hide();
-            
+
                 // Displaying the recipient name if the token is valid
                 const guests = data.name.split(', ');
                 window.n_guests = guests.length;
                 displayGuestList(guests, data);
-            
+
                 // Add secret location
                 $('#loc_1').text(data.location_1);
                 $('#loc_2').text(data.location_2);
                 $('#popup-location').text(data.location_2);
-            
+
                 setupMapLocations(data.locations);
             } else if (data.status === 'bad_token') {
                 console.error("Invalid token");
-            
+
                 $('#loc_2').text("Please use the correct rsvp token to reveal the location.");
                 $('#rsvp-loading').text('Invalid RSVP link. Please use the link provided with your invitation.');
                 $('#rsvp-public-message').show();
-            
+
                 alert("Invalid rsvp token provided. Please check and try again.");
             } else if (data.status === 'no_token') {
                 $('#loc_2').text("Please specify an rsvp token to reveal the location.");
@@ -253,36 +264,53 @@ function getMenuItems(index) {
 }
 
 function checkChanged(checkedCheckbox) {
-    const checkboxes = document.querySelectorAll('input[name="attend-option"]');
     const submitButton = document.getElementById("submit");
+    // Per-event RSVP: three independent event checkboxes ("attend-event") plus a
+    // mutually-exclusive "can't make it" box ("attend-no").
+    const eventBoxes = document.querySelectorAll('input[name="attend-event"]');
+    const noBox = document.getElementById("attend-no");
 
-    var anyChecked = false;
-    checkboxes.forEach((checkbox) => {
-        if (checkbox !== checkedCheckbox) {
-            checkbox.checked = false;
-        }
-        anyChecked = (anyChecked | checkbox.checked);
-    });
+    if (checkedCheckbox === noBox && noBox.checked) {
+        // "Can't make it" clears every event selection.
+        eventBoxes.forEach((cb) => cb.checked = false);
+    } else if (checkedCheckbox !== noBox && checkedCheckbox.checked) {
+        // Selecting any event clears "can't make it".
+        noBox.checked = false;
+    }
 
-    const isAttending = document.getElementById("attend-both").checked || document.getElementById("attend-wedding").checked;
+    var anyEvent = false;
+    eventBoxes.forEach((cb) => anyEvent = (anyEvent | cb.checked));
 
-    if (isAttending) {
-        if (window.n_guests > 1) {
-            showAttend('multi-attend');
-        } else {
-            showAttend('normal-attend');
-        }
+    // Only the wedding drives the per-guest menu / attendance section.
+    const isWedding = document.getElementById("attend-wedding").checked;
+    if (isWedding) {
+        showAttend(window.n_guests > 1 ? 'multi-attend' : 'normal-attend');
+    } else {
+        hideAttend('multi-attend');
+        hideAttend('normal-attend');
+    }
+
+    if (!anyEvent && !noBox.checked) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Please select a response!';
+        return;
+    }
+
+    if (noBox.checked) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit response, we'll miss you!";
+        return;
+    }
+
+    if (isWedding) {
         var attendList = [];
-        document.getElementsByName("attend-guest").forEach((element, i) => attendList.push(element.checked));
-        var n_guests = attendList.filter(Boolean).length;
-        if (window.n_guests === 1) {
-            n_guests = 1;
-        }
+        document.getElementsByName("attend-guest").forEach((element) => attendList.push(element.checked));
+        var n_guests = window.n_guests === 1 ? 1 : attendList.filter(Boolean).length;
         if (n_guests > 0) {
             if (window.n_guests > 1) {
                 submitButton.textContent = `${window.responded ? 'Update ' : ''} RSVP for ${n_guests} guest${n_guests > 1 ? 's' : ''}`;
             } else {
-                submitButton.textContent = "Update RSVP";
+                submitButton.textContent = window.responded ? "Update RSVP" : "RSVP";
             }
             submitButton.disabled = false;
         } else {
@@ -290,14 +318,9 @@ function checkChanged(checkedCheckbox) {
             submitButton.disabled = true;
         }
     } else {
-        hideAttend('multi-attend');
-        hideAttend('normal-attend');
-        submitButton.textContent = "Submit response, we'll miss you!";
-    }
-
-    submitButton.disabled = !anyChecked;
-    if (!anyChecked) {
-        submitButton.textContent = 'Please select a response!';
+        // Attending other events but not the wedding dinner — no menu required.
+        submitButton.textContent = window.responded ? "Update RSVP" : "Submit RSVP";
+        submitButton.disabled = false;
     }
 }
 
@@ -445,28 +468,27 @@ function displayGuestList(guestNames, data) {
     // Appending the guest list element to the RSVP section
     rsvpSection.hidden = false
 
-    const attendBoth = document.getElementById("attend-both");
+    const attendNightBefore = document.getElementById("attend-night-before");
     const attendWedding = document.getElementById("attend-wedding");
+    const attendMorningAfter = document.getElementById("attend-morning-after");
     const attendNo = document.getElementById("attend-no");
 
     if (data.responded) {
         submitButton.disabled = data.locked
-        if (data.attending) {
-            if (guestNames.length > 1) {
-                showAttend('multi-attend');
-            } else {
-                showAttend('normal-attend');
-            }
-            if (data.night_before) {
-                attendBoth.checked = true;
-            } else {
-                attendWedding.checked = true;
-            }
-        } else {
-            attendNo.checked = true
+        // Restore each event independently from its own boolean.
+        attendWedding.checked = data.attending === true;
+        attendNightBefore.checked = data.night_before === true;
+        attendMorningAfter.checked = data.morning_after === true;
+        var anyEvent = attendWedding.checked || attendNightBefore.checked || attendMorningAfter.checked;
+        if (attendWedding.checked) {
+            showAttend(guestNames.length > 1 ? 'multi-attend' : 'normal-attend');
         }
-        attendBoth.disabled = data.locked;
+        if (!anyEvent) {
+            attendNo.checked = true;
+        }
+        attendNightBefore.disabled = data.locked;
         attendWedding.disabled = data.locked;
+        attendMorningAfter.disabled = data.locked;
         attendNo.disabled = data.locked;
         var allergyList = String(data.has_allergies).split(', ');
         document.getElementsByName("allergy-guest").forEach((element, i) => {
@@ -474,8 +496,9 @@ function displayGuestList(guestNames, data) {
             element.disabled = data.locked;
         });
         if (!data.locked) {
-            if (window.n_guests > 1) {
-                submitButton.textContent = `${window.responded ? 'Update ' : ''} RSVP for ${n_guests} guest${n_guests > 1 ? 's' : ''}`;
+            var n_attending = String(data.attend_list).split(', ').filter((x) => x === 'true').length;
+            if (window.n_guests > 1 && attendWedding.checked) {
+                submitButton.textContent = `Update RSVP for ${n_attending} guest${n_attending !== 1 ? 's' : ''}`;
             } else {
                 submitButton.textContent = "Update RSVP"
             }
@@ -626,7 +649,7 @@ function setupMapLocations(locations) {
         var bounds = L.latLngBounds(locations.map(function (l) { return [l.lat, l.lng]; }));
         map.fitBounds(bounds, { padding: [30, 30] });
         map.once('moveend', function () {
-            map.setZoom(map.getZoom() - 3);
+            map.setZoom(map.getZoom());
         });
     }
 }
@@ -716,7 +739,7 @@ $(document).ready(function () {
     $('.nav-links a').click(function () {
         $('.nav-links').removeClass('open');
     });
-    
+
     setupMap();
 });
 
